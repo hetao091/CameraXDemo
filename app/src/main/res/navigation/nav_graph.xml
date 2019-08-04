@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<navigation
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/nav_graph"
+        app:startDestination="@id/permissionsFragment">
+
+
+    <!--<fragment-->
+    <!--android:id="@+id/galleryFragment"-->
+    <!--android:name="com.android.example.cameraxbasic.fragments.GalleryFragment"-->
+    <!--android:label="GalleryFragment" >-->
+    <!--<action-->
+    <!--android:id="@+id/action_gallery_to_camera"-->
+    <!--app:destination="@id/cameraFragment" />-->
+    <!--<argument-->
+    <!--android:name="rootDirectoryString"-->
+    <!--app:argType="string"-->
+    <!--android:defaultValue='""' />-->
+    <!--</fragment>-->
+
+    <fragment
+            android:label="CameraXFragment"
+            android:id="@+id/cameraXFragment"
+            android:name="com.github.cameraxdemo.fragments.CameraXFragment">
+    </fragment>
+
+
+    <fragment
+            android:id="@+id/permissionsFragment"
+            android:name="com.github.cameraxdemo.fragments.PermissionsFragment"
+            android:label="PermissionsFragment">
+        <action
+                android:id="@+id/action_permissions_to_camerax"
+                app:destination="@id/cameraXFragment"/>
+    </fragment>
+    <fragment
+            android:label="UITestFragment"
+            android:id="@+id/uITestFragment"
+            android:name="com.github.cameraxdemo.fragments.UITestFragment">
+    </fragment>
+</navigation>
