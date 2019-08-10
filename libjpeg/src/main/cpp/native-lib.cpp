@@ -13,7 +13,7 @@
 #include <zconf.h>
 #include <sys/stat.h>
 #include <string.h>
-#include <__clang_cuda_device_functions.h>
+
 #include <malloc.h>
 
 typedef uint8_t BYTE;
@@ -24,7 +24,7 @@ typedef uint8_t BYTE;
 #define LOGW(FORMAT, ...) __android_log_print(ANDROID_LOG_WARN,TAG,FORMAT,##__VA_ARGS__);
 #define LOGD(FORMAT, ...) __android_log_print(ANDROID_LOG_DEBUG,TAG,FORMAT,##__VA_ARGS__);
 
-// 结构体
+// 错误输出结构体
 struct my_error_mgr {
     struct jpeg_error_mgr pub;
     jmp_buf setjmp_buffer;

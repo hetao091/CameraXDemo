@@ -40,5 +40,6 @@ target_link_libraries(
         native-lib
         #将所需的库和自己要生成的动态库连接起来
         turbojpeg
-
+        #这是一个很小的库，展示一个稳定的，基于C语言的接口，使本机代码安全地访问Java对象的像素缓冲区的位图
+        jnigraphics
         ${log-lib})

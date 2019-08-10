@@ -1,0 +1,1 @@
+/Users/hetao/Documents/newSVNApp/CameraXDemo/buildSrc/build/classes/kotlin/main/Android.class:/Users/hetao/Documents/newSVNApp/CameraXDemo/buildSrc/build/classes/kotlin/main/Libs.class:/Users/hetao/Documents/newSVNApp/CameraXDemo/buildSrc/build/classes/kotlin/main/Versions$Gradle.class:/Users/hetao/Documents/newSVNApp/CameraXDemo/buildSrc/build/classes/kotlin/main/Versions.class
