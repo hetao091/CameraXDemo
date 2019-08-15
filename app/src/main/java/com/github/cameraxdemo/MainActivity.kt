@@ -1,12 +1,13 @@
 package com.github.cameraxdemo
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-
-
+import java.io.IOException
 
 
 class MainActivity : AppCompatActivity() {
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         window.statusBarColor = Color.TRANSPARENT
         // 虚拟导航键
         window.navigationBarColor = Color.TRANSPARENT
+
     }
 
     override fun onResume() {
@@ -53,4 +55,21 @@ class MainActivity : AppCompatActivity() {
         // 创建对话框
     }
 
+//    private fun getImage(){
+//        var  bt  = ByteArray(4096)
+//        NativeUtils.compressBitmap(getImageFromAssetsFile("tt.jpg")!!,100,bt,true)
+//    }
+
+    private fun getImageFromAssetsFile(fileName: String): Bitmap? {
+        var image: Bitmap? = null
+        val am = resources.assets
+        try {
+            val `is` = am.open(fileName)
+            image = BitmapFactory.decodeStream(`is`)
+            `is`.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return image
+    }
 }

@@ -44,20 +44,21 @@ class CameraHolder private constructor() {
 
     // 默认开启后置摄像头
     private var mCameraLensFacing = LensFacing.BACK
+    //
     private lateinit var mLifecycleOwner: LifecycleOwner
+    //
     private lateinit var mCameraView: TextureView
     // 图片采集器
     private var imageCapture: ImageCapture? = null
     // 视频采集器
     private var videoCapture: VideoCapture? = null
-
+    //
     private lateinit var mPreview: Preview
-
     //
     private val mFocusingRect = Rect()
     private val mMeteringRect = Rect()
     private val mCropRegion: Rect? = null
-
+    //
     private var mCameraManager: CameraManager? = null
 
     companion object {
@@ -145,18 +146,24 @@ class CameraHolder private constructor() {
 
     @SuppressLint("RestrictedApi")
     fun startRecording() {
+        setCameraPreview(mCameraView)
+        val videoCaptureConfig = VideoCaptureConfig.Builder().apply {
+            setLensFacing(mCameraLensFacing)
+            setTargetAspectRatio(getScreenAspectRatio())
+            setTargetRotation(mCameraView.display.rotation)
+        }.build()
+        videoCapture = VideoCapture(videoCaptureConfig)
+        CameraX.bindToLifecycle(mLifecycleOwner, mPreview,videoCapture)
+        videoCapture!!.startRecording(File(""), object : VideoCapture.OnVideoSavedListener {
+            override fun onVideoSaved(file: File?) {
 
+            }
 
-//        videoCapture!!.startRecording(videoFile, object : VideoCapture.OnVideoSavedListener {
-//            override fun onVideoSaved(file: File?) {
-//
-//            }
-//
-//            override fun onError(useCaseError: VideoCapture.UseCaseError?, message: String?, cause: Throwable?) {
-//
-//            }
-//
-//        })
+            override fun onError(useCaseError: VideoCapture.UseCaseError?, message: String?, cause: Throwable?) {
+
+            }
+
+        })
     }
 
     @SuppressLint("RestrictedApi")
@@ -169,6 +176,7 @@ class CameraHolder private constructor() {
 
     /**
      * 创建分析器
+     * 这里进行例如人脸检测、二维码识别等操作
      */
     private class LuminosityAnalyzer : ImageAnalysis.Analyzer {
         override fun analyze(image: ImageProxy?, rotationDegrees: Int) {
@@ -227,15 +235,8 @@ class CameraHolder private constructor() {
         //  预览设置
         imageCapture = ImageCapture(imageCaptureConfig)
 
-        val videoCaptureConfig = VideoCaptureConfig.Builder().apply {
-            setLensFacing(mCameraLensFacing)
-            setTargetAspectRatio(getScreenAspectRatio())
-            setTargetRotation(viewFinder.display.rotation)
-        }.build()
-        videoCapture = VideoCapture(videoCaptureConfig)
-
         //
-        CameraX.bindToLifecycle(lifecycleOwner, mPreview, imageCapture,videoCapture)
+        CameraX.bindToLifecycle(lifecycleOwner, mPreview, imageCapture)
     }
 
     /**

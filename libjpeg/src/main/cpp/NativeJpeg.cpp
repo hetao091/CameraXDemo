@@ -47,69 +47,18 @@ my_error_exit(j_common_ptr
 
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_github_jpegturbodemo_NativeUtils_stringFromJNI(
+Java_com_github_libjpeg_NativeUtils_stringFromJNI(
         JNIEnv *env,
         jobject /* this */) {
     std::string hello = "Hello from C++";
     return env->NewStringUTF(hello.c_str());
 }
 
+
 extern "C"
-int generateJPEG(BYTE *data, int w, int h, jint quality, const char *location, jboolean optimize) {
-    int nComponent = 3;
-    struct jpeg_compress_struct jcs;
-    //自定义的error
-    struct my_error_mgr jem;
+int generateJPEG(BYTE *data, int w, int h, int quality,
+                 const char *location, jboolean optimize);
 
-    jcs.err = jpeg_std_error(&jem.pub);
-
-    if (setjmp(jem.setjmp_buffer)) {
-        return 0;
-    }
-    //为JPEG对象分配空间并初始化
-    jpeg_create_compress(&jcs);
-    //获取文件信息 只允许写数据
-    FILE *f = fopen(location, "wb");
-    if (f == NULL) {
-        return 0;
-    }
-
-    //指定压缩数据源
-    jpeg_stdio_dest(&jcs, f);
-    jcs.image_width = w;
-    jcs.image_height = h;
-
-    jcs.arith_code = false;
-    jcs.input_components = nComponent;
-    jcs.in_color_space = JCS_RGB;
-
-    jpeg_set_defaults(&jcs);
-    jcs.optimize_coding = quality;
-
-    //为压缩设定参数，包括图像大小，颜色空间
-    jpeg_set_quality(&jcs, quality, true);
-    //开始压缩
-    jpeg_start_compress(&jcs, true);
-    JSAMPROW row_point[1];
-    int row_stride;
-    row_stride = jcs.image_width * nComponent;
-    while (jcs.next_scanline < jcs.image_height) {
-        row_point[0] = &data[jcs.next_scanline * row_stride];
-        jpeg_write_scanlines(&jcs, row_point, 1);
-    }
-    //  关键代码
-    if (jcs.optimize_coding) {
-        LOGD("哈夫曼算法完成压缩");
-    } else {
-        LOGD("未使用哈夫曼算法");
-    }
-    //压缩完毕
-    jpeg_finish_compress(&jcs);
-    //释放资源
-    jpeg_destroy_compress(&jcs);
-    fclose(f);
-    return 1;
-}
 
 /**
  *
@@ -148,12 +97,12 @@ const char *jstringToString(JNIEnv *env, jstring jstr) {
 
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_github_jpegturbodemo_NativeUtils_compressBitmap(
-        JNIEnv *env, jobject bitmap,
+Java_com_github_libjpeg_NativeUtils_compressBitmap(
+        JNIEnv *env, jobject /* this */,jobject bitmap,
         jint quality,
         jbyteArray fileByteArray,
         jboolean optimize) {
-
+    LOGD(">>>>>>>>>>>>_进入函数");
     // 结构体 指针
     AndroidBitmapInfo androidBitmapInfo;
     // 像素指针
@@ -164,8 +113,10 @@ Java_com_github_jpegturbodemo_NativeUtils_compressBitmap(
     BYTE *data;
     // 定义临时变量
     BYTE *tempData;
+
     // 文件路径
     char *file = ConvertJByteArrayToChars(env, fileByteArray);
+
     //装载bitmap解析
     if ((ret = AndroidBitmap_getInfo(env, bitmap, &androidBitmapInfo)) < 0) {
         LOGE("解析bitmap失败");
@@ -192,6 +143,7 @@ Java_com_github_jpegturbodemo_NativeUtils_compressBitmap(
     data = static_cast<BYTE *>(malloc(static_cast<size_t>(w * h * 3)));
     //
     tempData = data;
+    LOGD("_遍历RGB");
     // 遍历像素矩阵 bitmap转为RGB
     for (int i = 0; i < h; i++) {
         for (int j = 0; j < w; j++) {
@@ -202,22 +154,90 @@ Java_com_github_jpegturbodemo_NativeUtils_compressBitmap(
             g = static_cast<BYTE>((color & 0x0000FF00) >> 8);
             // 低8位
             b = static_cast<BYTE>(color & 0x000000FF);
+            // 存入data
+            *data = b;
+            *(data + 1) = g;
+            *(data + 2) = r;
             data += 3;
             pixelsBitmap += 4;
 
         }
     }
+    LOGD("释放画布");
     // 释放画布
     AndroidBitmap_unlockPixels(env, bitmap);
+    LOGD("进入generateJPEG函数");
     // 调用libjpeg函数
     int resultCode = generateJPEG(tempData, w, h, quality, file, optimize);
-    // 释放
+    // 释放容器
     free(tempData);
     if (resultCode == 0) {
         return env->NewStringUTF("0");
     }
     return env->NewStringUTF("1");
+}
 
+//
+extern "C"
+int generateJPEG(BYTE *data, int w, int h, jint quality, const char *location, jboolean optimize) {
+    int nComponent = 3;
+    struct jpeg_compress_struct jcs;
+    //自定义的error
+    struct my_error_mgr jem;
+
+    jcs.err = jpeg_std_error(&jem.pub);
+    if (setjmp(jem.setjmp_buffer)) {
+        return 0;
+    }
+    //为JPEG对象分配空间并初始化
+    jpeg_create_compress(&jcs);
+    //获取文件信息 只允许写数据
+    LOGD("-开始读取文件信息");
+    FILE *f = fopen(location, "wb");
+    if (f == NULL) {
+        LOGD("获取文件信息为空_返回");
+        return 0;
+    }
+
+    //指定压缩数据源
+    jpeg_stdio_dest(&jcs, f);
+    jcs.image_width = w;
+    jcs.image_height = h;
+
+    jcs.arith_code = false;
+    // nComponent为1代表灰度图JCS_GRAYSCALE，3代表彩色位图图像
+    jcs.input_components = nComponent;
+    jcs.in_color_space = JCS_RGB;
+    //
+    jpeg_set_defaults(&jcs);
+    // 关键代码optimize_coding为TRUE，将会使得压缩图像过程中基于图像数据计算哈弗曼表，由于这个计算会显著消耗空间和时间，默认值被设置为FALSE。
+    jcs.optimize_coding = optimize;
+    //为压缩设定参数，包括图像大小，颜色空间
+    jpeg_set_quality(&jcs, quality, true);
+    //开始压缩
+    jpeg_start_compress(&jcs, true);
+    JSAMPROW row_point[1];
+    int row_stride;
+    row_stride = jcs.image_width * nComponent;
+    // 行宽经过compress中循环变为了image宽度的3倍了，需要通过循环截成正常宽度
+    while (jcs.next_scanline < jcs.image_height) {
+        row_point[0] = &data[jcs.next_scanline * row_stride];
+        // 写入数据
+        jpeg_write_scanlines(&jcs, row_point, 1);
+    }
+
+    if (jcs.optimize_coding) {
+        LOGD("哈夫曼算法完成压缩");
+    } else {
+        LOGD("未使用哈夫曼算法");
+    }
+    //压缩完毕
+    jpeg_finish_compress(&jcs);
+    //释放资源
+    jpeg_destroy_compress(&jcs);
+    fclose(f);
+    LOGD("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+    return 1;
 }
 
 

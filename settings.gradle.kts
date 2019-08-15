@@ -1,1 +1,2 @@
-include (":app","libjpeg")
+include (":app")
+include(":libjpeg")

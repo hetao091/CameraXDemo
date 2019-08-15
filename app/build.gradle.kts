@@ -62,4 +62,7 @@ dependencies {
     // Glide
     implementation (Libs.glide)
     annotationProcessor (Libs.glide_compiler)
+    //
+    implementation (project(":libjpeg"))
+
 }

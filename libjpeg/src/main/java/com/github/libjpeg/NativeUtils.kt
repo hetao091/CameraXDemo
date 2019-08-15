@@ -1,5 +1,7 @@
 package com.github.libjpeg
 
+import android.graphics.Bitmap
+
 
 /**
  * =====================================
@@ -10,23 +12,21 @@ package com.github.libjpeg
  * revise   :
  * =====================================
  */
-object NativeUtils {
+ object NativeUtils {
 
     init {
-        System.loadLibrary("native-lib")
+        System.loadLibrary("NativeJpeg")
     }
 
 
     external fun stringFromJNI(): String
 
     /**
-     * [w] 图片宽度
-     * [h] 图片宽度
      * [quality] 图片压缩质量
      * [fileByteArray] 图片源文件
      * [optimize] 是否启用霍夫曼编码
      */
-    external fun compressBitmap(w: Int, h: Int, quality: Int, fileByteArray: ByteArray, optimize: Boolean): String
+    external fun compressBitmap(bitmap: Bitmap, quality: Int, fileByteArray: ByteArray, optimize: Boolean): String
 
     /**
      * [w] 图片宽度
