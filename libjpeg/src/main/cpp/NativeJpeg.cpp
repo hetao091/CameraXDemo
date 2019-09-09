@@ -201,6 +201,7 @@ int generateJPEG(BYTE *data, int w, int h, jint quality, const char *location, j
 
     //指定压缩数据源
     jpeg_stdio_dest(&jcs, f);
+    // 获取宽高
     jcs.image_width = w;
     jcs.image_height = h;
 

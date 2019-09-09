@@ -1,0 +1,46 @@
+
+{
+	"buildFiles" : [ "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/CMakeLists.txt" ],
+	"cleanCommands" : 
+	[
+		"/Users/hetao/Documents/android-sdk-macosx/cmake/3.6.4111459/bin/cmake --build /Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/.cxx/cmake/debug/armeabi-v7a --target clean"
+	],
+	"cppFileExtensions" : [ "cpp" ],
+	"libraries" : 
+	{
+		"NativeJpeg-Debug-armeabi-v7a" : 
+		{
+			"abi" : "armeabi-v7a",
+			"artifactName" : "NativeJpeg",
+			"buildCommand" : "/Users/hetao/Documents/android-sdk-macosx/cmake/3.6.4111459/bin/cmake --build /Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/.cxx/cmake/debug/armeabi-v7a --target NativeJpeg",
+			"buildType" : "debug",
+			"files" : 
+			[
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=/Users/hetao/Documents/android-sdk-macosx/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/hetao/Documents/android-sdk-macosx/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot  -DNativeJpeg_EXPORTS -I../../../../src/main/cpp/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security   -O0 -fno-limit-debug-info  -fPIC    -c ",
+					"src" : "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/src/main/cpp/NativeJpeg.cpp",
+					"workingDirectory" : "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/.cxx/cmake/debug/armeabi-v7a"
+				}
+			],
+			"output" : "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/build/intermediates/cmake/debug/obj/armeabi-v7a/libNativeJpeg.so",
+			"toolchain" : "12166576834966824346"
+		},
+		"turbojpeg-Debug-armeabi-v7a" : 
+		{
+			"abi" : "armeabi-v7a",
+			"artifactName" : "turbojpeg",
+			"buildType" : "debug",
+			"output" : "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/libs/armeabi-v7a/libturbojpeg.a",
+			"toolchain" : "12166576834966824346"
+		}
+	},
+	"toolchains" : 
+	{
+		"12166576834966824346" : 
+		{
+			"cCompilerExecutable" : "/Users/hetao/Documents/android-sdk-macosx/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang",
+			"cppCompilerExecutable" : "/Users/hetao/Documents/android-sdk-macosx/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++"
+		}
+	}
+}

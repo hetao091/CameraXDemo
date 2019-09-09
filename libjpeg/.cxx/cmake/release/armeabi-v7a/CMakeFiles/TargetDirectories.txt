@@ -1,0 +1,3 @@
+/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/.cxx/cmake/release/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/.cxx/cmake/release/armeabi-v7a/CMakeFiles/rebuild_cache.dir
+/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/.cxx/cmake/release/armeabi-v7a/CMakeFiles/NativeJpeg.dir

@@ -1,0 +1,69 @@
+{
+  "variant": {
+    "module": {
+      "rootBuildGradleFolder": "/Users/hetao/Documents/newSVNApp/CameraXDemo",
+      "sdkFolder": "/Users/hetao/Documents/android-sdk-macosx",
+      "isNativeCompilerSettingsCacheEnabled": false,
+      "isBuildOnlyTargetAbiEnabled": true,
+      "splitsAbiFilterSet": [],
+      "intermediatesFolder": "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/build/intermediates",
+      "gradleModulePathName": ":libjpeg",
+      "moduleRootFolder": "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg",
+      "makeFile": "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/CMakeLists.txt",
+      "buildSystem": "CMAKE",
+      "compilerSettingsCacheFolder": "/Users/hetao/Documents/newSVNApp/CameraXDemo/.cxx",
+      "cxxFolder": "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/.cxx",
+      "ndkFolder": "/Users/hetao/Documents/android-sdk-macosx/ndk-bundle",
+      "ndkVersion": "20.0.5594570",
+      "ndkSupportedAbiList": [
+        "ARMEABI_V7A",
+        "ARM64_V8A",
+        "X86",
+        "X86_64"
+      ],
+      "ndkDefaultAbiList": [
+        "ARMEABI_V7A",
+        "ARM64_V8A",
+        "X86",
+        "X86_64"
+      ],
+      "cmakeToolchainFile": "."
+    },
+    "buildSystemArgumentList": [],
+    "cFlagList": [],
+    "cppFlagsList": [
+      ""
+    ],
+    "variantName": "release",
+    "soFolder": "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/build/intermediates/cmake/release/lib",
+    "objFolder": "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/build/intermediates/cmake/release/obj",
+    "jsonFolder": "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/.cxx/cmake/release",
+    "gradleBuildOutputFolder": "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/.cxx/cxx/release",
+    "isDebuggableEnabled": false,
+    "validAbiList": [
+      "ARMEABI_V7A"
+    ],
+    "buildTargetSet": []
+  },
+  "abi": "ARMEABI_V7A",
+  "abiPlatformVersion": 21,
+  "cxxBuildFolder": "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/.cxx/cmake/release/armeabi-v7a",
+  "jsonFile": "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/.cxx/cmake/release/armeabi-v7a/android_gradle_build.json",
+  "gradleBuildOutputFolder": "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/.cxx/cxx/release/armeabi-v7a",
+  "objFolder": "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/build/intermediates/cmake/release/obj/armeabi-v7a",
+  "buildCommandFile": "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/.cxx/cmake/release/armeabi-v7a/build_command.txt",
+  "buildOutputFile": "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/.cxx/cmake/release/armeabi-v7a/build_output.txt",
+  "modelOutputFile": "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/.cxx/cmake/release/armeabi-v7a/build_model.json",
+  "cmake": {
+    "cmakeListsWrapperFile": "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/.cxx/cxx/release/armeabi-v7a/CMakeLists.txt",
+    "toolchainWrapperFile": "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/.cxx/cxx/release/armeabi-v7a/android_gradle_build.toolchain.cmake",
+    "buildGenerationStateFile": "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/.cxx/cxx/release/armeabi-v7a/build_generation_state.json",
+    "cacheKeyFile": "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/.cxx/cxx/release/armeabi-v7a/compiler_cache_key.json",
+    "compilerCacheUseFile": "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/.cxx/cxx/release/armeabi-v7a/compiler_cache_use.json",
+    "compilerCacheWriteFile": "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/.cxx/cxx/release/armeabi-v7a/compiler_cache_write.json",
+    "toolchainSettingsFromCacheFile": "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/.cxx/cxx/release/armeabi-v7a/compiler_settings_cache.cmake",
+    "cmakeWrappingBaseFolder": "."
+  },
+  "jsonGenerationLoggingRecordFile": "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/.cxx/cmake/release/armeabi-v7a/json_generation_record.json",
+  "compileCommandsJsonFile": "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/.cxx/cmake/release/armeabi-v7a/compile_commands.json"
+}

@@ -21,13 +21,13 @@ object Versions {
 
     const val constraint_layout = "1.1.3"
 
-    const val com_android_tools_build_gradle = "3.4.2"
+    const val com_android_tools_build_gradle = "3.5.0"
 
     const val lint_gradle = "26.4.2"
 
     const val junit = "4.12"
 
-    const val org_jetbrains_kotlin = "1.3.41"
+    const val org_jetbrains_kotlin = "1.3.50"
 
     const val coroutines_version = "1.1.1"
 
