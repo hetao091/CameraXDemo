@@ -112,8 +112,9 @@ class MediaPreviewButton(
             // 绘制三横线
             mPath.moveTo(centerX - innerSquareRadius, centerY)
             mPath.lineTo(centerX + innerSquareRadius, centerY)
-
+            //
             canvas.drawPath(mPath, mPaint)
+
         }
         // 确认
         if (mType == CONFIRM) {

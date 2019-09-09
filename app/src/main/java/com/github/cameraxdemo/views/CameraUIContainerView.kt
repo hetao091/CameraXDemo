@@ -50,7 +50,11 @@ class CameraUIContainerView : FrameLayout {
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         mContext = context
         layoutWidth = ScreenSizeUtils.getScreenWidth(mContext)
         initView()
@@ -61,11 +65,22 @@ class CameraUIContainerView : FrameLayout {
      */
     private fun initView() {
         setWillNotDraw(false)
-        val rootView = LayoutInflater.from(mContext).inflate(com.github.cameraxdemo.R.layout.camera_ui_view, this)
+        val rootView = LayoutInflater.from(mContext)
+            .inflate(com.github.cameraxdemo.R.layout.camera_ui_view, this)
         mFocusView = rootView.findViewById(com.github.cameraxdemo.R.id.focusView)
-        mCameraCaptureLayout = rootView.findViewById(com.github.cameraxdemo.R.id.cameraCaptureLayout)
+        mCameraCaptureLayout =
+            rootView.findViewById(com.github.cameraxdemo.R.id.cameraCaptureLayout)
         mSwitch = Switch()
-        //
+
+        // 照片预览
+        imageView = ImageView(mContext)
+        val mImageViewLayoutParams =
+            LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+        imageView.layoutParams = mImageViewLayoutParams
+        this.addView(imageView, 0)
+
+
+        // 回调
         mCameraCaptureLayout.captureButtonStateCallBack {
 
             if (it == State.STATE_PRESS) {
@@ -74,7 +89,10 @@ class CameraUIContainerView : FrameLayout {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         parentView.postDelayed({
                             parentView.foreground = ColorDrawable(Color.WHITE)
-                            parentView.postDelayed({ parentView.foreground = null }, ANIMATION_FAST_MILLIS)
+                            parentView.postDelayed(
+                                { parentView.foreground = null },
+                                ANIMATION_FAST_MILLIS
+                            )
                         }, ANIMATION_SLOW_MILLIS)
 
                     }
@@ -83,12 +101,13 @@ class CameraUIContainerView : FrameLayout {
                 mSwitch.capture {
                     object : TakePictureCallBack {
                         override fun success(mediaFilePath: String) {
-                            //
+                            // 显示预览照片
                             Glide.with(mContext).load(mediaFilePath).into(imageView)
                             mCameraCaptureLayout.setMediaVisible()
                         }
 
                         override fun failure(errorString: String) {
+                            // 采集照片失败
 
                         }
 
@@ -106,13 +125,9 @@ class CameraUIContainerView : FrameLayout {
             }
         }
 
-        // 照片预览
-        imageView = ImageView(mContext)
-        val mImageViewLayoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-        imageView.layoutParams = mImageViewLayoutParams
-        this.addView(imageView, 0)
-
-
+        mCameraCaptureLayout.mediaPreviewCancelAction {
+            imageView.visibility = View.GONE
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -136,9 +151,9 @@ class CameraUIContainerView : FrameLayout {
             }
 
             MotionEvent.ACTION_UP -> {
-//
-                mSwitch.focus(event.x, event.y,action = {
-                   // 获取对焦结果
+                //
+                mSwitch.focus(event.x, event.y, action = {
+                    // 获取对焦结果
                     mFocusView.visibility = View.GONE
                 })
             }

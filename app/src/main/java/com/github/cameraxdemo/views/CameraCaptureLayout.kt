@@ -37,7 +37,11 @@ class CameraCaptureLayout : FrameLayout {
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         mContext = context
         mCaptureLayoutWidth = ScreenSizeUtils.getScreenWidth(context)
         // 以1080 为例  按钮宽高216   放大后324  缩小112  差108
@@ -52,34 +56,36 @@ class CameraCaptureLayout : FrameLayout {
         setWillNotDraw(false)
         // 返回按钮
         mCameraReturnButton = CameraReturnButton(mContext, mCaptureBtSize / 2)
-        val mCameraReturnButtonLayoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+        val mCameraReturnButtonLayoutParams =
+            LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
         mCameraReturnButtonLayoutParams.gravity = Gravity.CENTER_VERTICAL
         mCameraReturnButtonLayoutParams.setMargins(mCaptureLayoutWidth / 6, 0, 0, 0)
         mCameraReturnButton.layoutParams = mCameraReturnButtonLayoutParams
         this.addView(mCameraReturnButton)
         // 拍照
         mCameraCaptureButton = CameraCaptureButton(mContext, mCaptureBtSize)
-        val mmCameraCaptureButtonLayoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+        val mmCameraCaptureButtonLayoutParams =
+            LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         mmCameraCaptureButtonLayoutParams.gravity = Gravity.CENTER
         mCameraCaptureButton.layoutParams = mmCameraCaptureButtonLayoutParams
         this.addView(mCameraCaptureButton)
 
         /******************* *************************/
-        //
+        // 预览取消
         mBtCancel = MediaPreviewButton(mContext, MediaPreviewButton.CANCEL, mCaptureBtSize)
         val mBtCancelParam = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         mBtCancelParam.gravity = Gravity.CENTER_VERTICAL
         mBtCancelParam.setMargins((mCaptureLayoutWidth / 6 - mCaptureBtSize / 2), 0, 0, 0)
         mBtCancel.layoutParams = mBtCancelParam
         this.addView(mBtCancel)
-
+        // 预览编辑
         mBtEditor = MediaPreviewButton(mContext, MediaPreviewButton.EDITOR, mCaptureBtSize)
         val mBtEditorParam = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         mBtEditorParam.gravity = Gravity.CENTER
         mBtEditorParam.setMargins(0, 0, 0, 0)
         mBtEditor.layoutParams = mBtEditorParam
         this.addView(mBtEditor)
-
+        // 预览确认
         mBtConfirm = MediaPreviewButton(mContext, MediaPreviewButton.CONFIRM, mCaptureBtSize)
         val mBtConfirmParam = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         mBtConfirmParam.gravity = Gravity.CENTER_VERTICAL or Gravity.END
@@ -94,9 +100,13 @@ class CameraCaptureLayout : FrameLayout {
      *
      */
     private fun setMediaButtonGone() {
+        // 隐藏预览相关按钮
         mBtCancel.visibility = View.GONE
         mBtEditor.visibility = View.GONE
         mBtConfirm.visibility = View.GONE
+        // 显示拍照
+        mCameraReturnButton.visibility = View.VISIBLE
+        mCameraCaptureButton.visibility = View.VISIBLE
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -128,6 +138,9 @@ class CameraCaptureLayout : FrameLayout {
         }
     }
 
+    /**
+     * 控制中心
+     */
     fun setMediaVisible() {
         mCameraReturnButton.visibility = View.GONE
         mCameraCaptureButton.visibility = View.GONE
@@ -139,9 +152,19 @@ class CameraCaptureLayout : FrameLayout {
         mBtConfirm.isEnabled = false
         // 添加X轴平移动画
         val animatorCancel =
-            ObjectAnimator.ofFloat(mBtCancel, "translationX", (mCaptureLayoutWidth /6 ).toFloat(), 0f)
+            ObjectAnimator.ofFloat(
+                mBtCancel,
+                "translationX",
+                (mCaptureLayoutWidth / 6).toFloat(),
+                0f
+            )
         val animatorConfirm =
-            ObjectAnimator.ofFloat(mBtConfirm, "translationX", -(mCaptureLayoutWidth / 6).toFloat(), 0f)
+            ObjectAnimator.ofFloat(
+                mBtConfirm,
+                "translationX",
+                -(mCaptureLayoutWidth / 6).toFloat(),
+                0f
+            )
 
         val set = AnimatorSet()
         set.playTogether(animatorCancel, animatorConfirm)
@@ -155,6 +178,13 @@ class CameraCaptureLayout : FrameLayout {
         })
         set.duration = 200
         set.start()
+    }
+
+    fun mediaPreviewCancelAction(action: () -> Unit) {
+        mBtCancel.setOnClickListener {
+            setMediaButtonGone()
+            action()
+        }
     }
 
 

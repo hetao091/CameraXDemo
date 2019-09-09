@@ -34,9 +34,8 @@ object Versions {
     const val lifecycle_version = "2.2.0-alpha02"
 
     const val nav_version = "2.0.0"
-
-    const val camerax_version = "1.0.0-alpha03"
-
+    //
+    const val camerax_version = "1.0.0-alpha04"
     //
 
     const val glide_version = "4.9.0"
