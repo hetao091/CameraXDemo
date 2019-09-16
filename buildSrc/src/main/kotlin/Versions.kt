@@ -37,25 +37,15 @@ object Versions {
     //
     const val camerax_version = "1.0.0-alpha04"
     //
-
     const val glide_version = "4.9.0"
 
-    object Gradle {
-        const val runningVersion = "5.1.1"
-
-        const val currentVersion = "5.5.1"
-
-        const val nightlyVersion = "5.6-20190718055002+0000"
-
-        const val releaseCandidate = ""
-    }
 }
 
 object Android {
     const val minSdkVersion = 21
-    const val targetSdkVersion = 28
-    const val compileSdkVersion = 28
-    const val buildToolsVersion = "28.0.3"
+    const val targetSdkVersion = 29
+    const val compileSdkVersion = 29
+    const val buildToolsVersion = "29.0.2"
     const val applicationId = "com.github.cameraxdemo"
     const val versionCode = 1
     const val versionName = "0.1"
