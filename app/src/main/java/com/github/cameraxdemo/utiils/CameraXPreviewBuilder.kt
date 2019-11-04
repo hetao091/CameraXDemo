@@ -76,9 +76,9 @@ class CameraXPreviewBuilder private constructor(
         viewFinderDisplay = viewFinder.display.displayId
         useCase = Preview(config)
         //  更新布局
-        useCase.onPreviewOutputUpdateListener = Preview.OnPreviewOutputUpdateListener {
+        useCase.setOnPreviewOutputUpdateListener {
             val viewFinder =
-                viewFinderRef.get() ?: return@OnPreviewOutputUpdateListener
+                viewFinderRef.get() ?: return@setOnPreviewOutputUpdateListener
             // 始终位于底层
             val parent = viewFinder.parent as ViewGroup
             parent.removeView(viewFinder)
@@ -92,6 +92,7 @@ class CameraXPreviewBuilder private constructor(
             // 设置具体预览属性
             updateTransform(viewFinder, rotation, it.textureSize, viewFinderDimens)
         }
+
         // 监听布局
         viewFinder.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
             val viewFinder = v as TextureView

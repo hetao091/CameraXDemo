@@ -125,7 +125,9 @@ class CameraUIContainerView : FrameLayout {
             }
         }
 
+        // 预览相关响应
         mCameraCaptureLayout.mediaPreviewCancelAction {
+            //  隐藏图片
             imageView.visibility = View.GONE
         }
     }
@@ -153,7 +155,7 @@ class CameraUIContainerView : FrameLayout {
             MotionEvent.ACTION_UP -> {
                 //
                 mSwitch.focus(event.x, event.y, action = {
-                    // 获取对焦结果
+                    // 获取对焦结果  隐藏对焦框
                     mFocusView.visibility = View.GONE
                 })
             }
@@ -217,9 +219,7 @@ class CameraUIContainerView : FrameLayout {
         mSwitch.releaseCamera()
     }
 
-
     /********** 对外提供方法 ***************/
-
     fun startPreview(lifecycleOwner: LifecycleOwner, viewFinder: TextureView) {
         mSwitch.startCamera(lifecycleOwner, viewFinder)
     }

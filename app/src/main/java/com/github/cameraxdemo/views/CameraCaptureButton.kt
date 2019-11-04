@@ -67,7 +67,7 @@ class CameraCaptureButton : View {
     // 定义回调
     private lateinit var action: (State) -> Unit
 
-    private var job = Job()
+    private val job = Job()
 //    override val coroutineContext: CoroutineContext
 //        get() = Dispatchers.Default + job
 
@@ -189,7 +189,8 @@ class CameraCaptureButton : View {
                 btInsideRadius,
                 (btRadius * 0.75).toFloat()
             )
-            job.cancel()
+//            job.cancel()
+            updateProgress().cancel()
             progress = 0f
             invalidate()
         } else {
@@ -201,7 +202,12 @@ class CameraCaptureButton : View {
     /**
      *  动画管理
      */
-    private fun setCaptureAnimation(outsideStart: Float, outsideEnd: Float, insideStart: Float, insideEnd: Float) {
+    private fun setCaptureAnimation(
+        outsideStart: Float,
+        outsideEnd: Float,
+        insideStart: Float,
+        insideEnd: Float
+    ) {
         // 外圆半径
         val outValueAnimator = ValueAnimator.ofFloat(outsideStart, outsideEnd)
         val insideValueAnimator = ValueAnimator.ofFloat(insideStart, insideEnd)
@@ -249,21 +255,19 @@ class CameraCaptureButton : View {
     }
 
     // 更新进度
-    private fun updateProgress() {
-        job = GlobalScope.launch(Dispatchers.IO) {
+    private fun updateProgress() =
+        GlobalScope.launch(Dispatchers.IO) {
             // 可取消的计算
             repeat(150) {
                 progress = (it / 149.0f) * 360f
                 withContext(Dispatchers.Main) {
-                    invalidate()
+                    invalida
                     // 利用协程挂起
                     delay(100L)
                     Log.v("updateProgress", "$progress")
                 }
-
             }
         }
-    }
 
 
     /**

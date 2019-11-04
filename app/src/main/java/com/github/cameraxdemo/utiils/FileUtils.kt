@@ -45,5 +45,27 @@ class FileUtils private constructor() {
 
 
         }
+
+        fun getOutputMediaVideoFile(): File {
+            val appContext = BaseApplication.getContext()
+            var mediaDir = appContext.externalMediaDirs.firstOrNull()?.let {
+                File(it, appContext.resources.getString(R.string.app_name)).apply { mkdirs() }
+            }
+            mediaDir = if (mediaDir != null && mediaDir.exists()) {
+                mediaDir
+            } else {
+                appContext.filesDir
+            }
+//            return File(
+//                mediaDir,
+//                SimpleDateFormat(FORMAT, Locale.CHINA).format(System.currentTimeMillis()) + PHOTO_EXTENSION
+//            )
+            return File(
+                mediaDir,
+                "tmp.mp4"
+            )
+
+
+        }
     }
 }

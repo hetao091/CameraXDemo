@@ -5,6 +5,7 @@
       "sdkFolder": "/Users/hetao/Documents/android-sdk-macosx",
       "isNativeCompilerSettingsCacheEnabled": false,
       "isBuildOnlyTargetAbiEnabled": true,
+      "ideBuildTargetAbi": "x86,armeabi-v7a,armeabi",
       "splitsAbiFilterSet": [],
       "intermediatesFolder": "/Users/hetao/Documents/newSVNApp/CameraXDemo/libjpeg/build/intermediates",
       "gradleModulePathName": ":libjpeg",

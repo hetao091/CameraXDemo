@@ -182,6 +182,7 @@ class CameraCaptureLayout : FrameLayout {
 
     fun mediaPreviewCancelAction(action: () -> Unit) {
         mBtCancel.setOnClickListener {
+            // 预览相关隐藏
             setMediaButtonGone()
             action()
         }

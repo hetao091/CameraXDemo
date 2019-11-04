@@ -16,6 +16,7 @@ import android.webkit.MimeTypeMap
 import androidx.camera.core.*
 import androidx.camera.core.CameraInfoUnavailableException
 import androidx.camera.core.CameraX.LensFacing
+import androidx.camera.core.CameraX.getCameraControl
 import androidx.camera.core.ImageCapture.Metadata
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.LifecycleOwner
@@ -23,6 +24,8 @@ import com.github.cameraxdemo.application.BaseApplication
 import com.github.cameraxdemo.utiils.CameraXPreviewBuilder
 import com.github.cameraxdemo.utiils.FileUtils
 import java.io.File
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -60,6 +63,7 @@ class CameraHolder private constructor() {
     private val mCropRegion: Rect? = null
     //
     private var mCameraManager: CameraManager? = null
+    private val executor = Executors.newSingleThreadExecutor()
 
     companion object {
         const val TAG = "CameraHolder"
@@ -78,7 +82,8 @@ class CameraHolder private constructor() {
         mLifecycleOwner = lifecycleOwner
         mCameraView = viewFinder
         // 确保没有绑定到CameraX的其他用例
-        mCameraManager = (mCameraView.context.getSystemService(Context.CAMERA_SERVICE) as CameraManager)
+        mCameraManager =
+            (mCameraView.context.getSystemService(Context.CAMERA_SERVICE) as CameraManager)
         startCameraPreview(lifecycleOwner, viewFinder)
     }
 
@@ -99,25 +104,35 @@ class CameraHolder private constructor() {
             //  是否镜像显示
             isReversedHorizontal = mCameraLensFacing == LensFacing.FRONT
         }
-        imageCapture?.takePicture(FileUtils.getOutputMediaFile(), object : ImageCapture.OnImageSavedListener {
-            override fun onImageSaved(file: File) {
-                // 成功后回调-> 照片处理模块
-                Log.v("imageSavedListener", file.absolutePath)
-                //扫描创建的目录加入到系统media菜单
-                val mimeType = MimeTypeMap.getSingleton()
-                    .getMimeTypeFromExtension(file.extension)
-                MediaScannerConnection.scanFile(
-                    BaseApplication.getContext(), arrayOf(file.absolutePath), arrayOf(mimeType), null
-                )
-                callBack().success(file.absolutePath)
-            }
+        imageCapture?.takePicture(
+            FileUtils.getOutputMediaFile(), metadata, executor,
+            object : ImageCapture.OnImageSavedListener {
+                override fun onError(
+                    imageCaptureError: ImageCapture.ImageCaptureError,
+                    message: String, cause: Throwable?
+                ) {
+                    cause!!.printStackTrace()
+//                    callBack().failure("message")
+                }
 
-            override fun onError(useCaseError: ImageCapture.UseCaseError, message: String, cause: Throwable?) {
-                cause!!.printStackTrace()
-                callBack().failure("message")
-            }
+                override fun onImageSaved(file: File) {
+                    // 成功后回调-> 照片处理模块
+                    Log.v("imageSavedListener", file.absolutePath)
+                    Log.v("imageSavedListener", Thread.currentThread().name)
+                    //扫描创建的目录加入到系统media菜单
+                    val mimeType = MimeTypeMap.getSingleton()
+                        .getMimeTypeFromExtension(file.extension)
+                    MediaScannerConnection.scanFile(
+                        BaseApplication.getContext(),
+                        arrayOf(file.absolutePath),
+                        arrayOf(mimeType),
+                        null
+                    )
+//                    callBack().success(file.absolutePath)
+                }
 
-        }, metadata)
+            }
+        )
         //
         return callBack()
     }
@@ -149,21 +164,32 @@ class CameraHolder private constructor() {
         setCameraPreview(mCameraView)
         val videoCaptureConfig = VideoCaptureConfig.Builder().apply {
             setLensFacing(mCameraLensFacing)
-            setTargetAspectRatio(getScreenAspectRatio())
+            setTargetAspectRatioCustom(getScreenAspectRatio())
             setTargetRotation(mCameraView.display.rotation)
         }.build()
         videoCapture = VideoCapture(videoCaptureConfig)
-        CameraX.bindToLifecycle(mLifecycleOwner, mPreview,videoCapture)
-        videoCapture!!.startRecording(File(""), object : VideoCapture.OnVideoSavedListener {
-            override fun onVideoSaved(file: File?) {
+        CameraX.bindToLifecycle(mLifecycleOwner, mPreview, videoCapture)
 
-            }
+        videoCapture!!.startRecording(
+           FileUtils.getOutputMediaVideoFile(),
+            executor,
+            object : VideoCapture.OnVideoSavedListener {
+                override fun onVideoSaved(file: File) {
 
-            override fun onError(useCaseError: VideoCapture.UseCaseError?, message: String?, cause: Throwable?) {
+                }
 
-            }
+                override fun onError(
+                    videoCaptureError: VideoCapture.VideoCaptureError,
+                    message: String,
+                    cause: Throwable?
+                ) {
+                    Log.v("OnVideoSavedListener", message)
+                }
 
-        })
+
+            })
+
+
     }
 
     @SuppressLint("RestrictedApi")
@@ -203,6 +229,7 @@ class CameraHolder private constructor() {
     /**
      * 开启预览
      */
+    @SuppressLint("RestrictedApi")
     private fun setCameraPreview(viewFinder: TextureView): Preview {
         // 确保没有绑定到CameraX的其他用例
         CameraX.unbindAll()
@@ -210,7 +237,7 @@ class CameraHolder private constructor() {
         val previewConfig = PreviewConfig.Builder().apply {
             setLensFacing(mCameraLensFacing)
             // 设置图像比例
-            setTargetAspectRatio(getScreenAspectRatio())
+            setTargetAspectRatioCustom(getScreenAspectRatio())
             // 设置取景的目标分辨率
             setTargetResolution(getScreenSize())
             setTargetRotation(viewFinder.display.rotation)
@@ -227,7 +254,7 @@ class CameraHolder private constructor() {
             setLensFacing(mCameraLensFacing)
             // 或者使用MAX_QUALITY 获取更高质量
             setCaptureMode(ImageCapture.CaptureMode.MIN_LATENCY)
-            setTargetAspectRatio(getScreenAspectRatio())
+            setTargetAspectRatioCustom(getScreenAspectRatio())
             setTargetRotation(viewFinder.display.rotation)
             // 闪光灯关闭
             setFlashMode(FlashMode.OFF)
@@ -252,17 +279,53 @@ class CameraHolder private constructor() {
      * 对焦
      */
     fun handlerFocus(x: Float, y: Float, action: () -> Unit) {
-        calculateTapArea(mFocusingRect, x, y, 1f)
-        calculateTapArea(mMeteringRect, x, y, 1.5f)
+//        calculateTapArea(mFocusingRect, x, y, 1f)
+////        calculateTapArea(mMeteringRect, x, y, 1.5f)
+////
+////        if (area(mFocusingRect) > 0 && area(mMeteringRect) > 0) {
+////            handleFocus(mFocusingRect, mMeteringRect, action)
+////        }
 
-        if (area(mFocusingRect) > 0 && area(mMeteringRect) > 0) {
-            handleFocus(mFocusingRect, mMeteringRect,action)
+        // API变更
+        val factory = SensorOrientedMeteringPointFactory(
+            mCameraView.width.toFloat(),
+            mCameraView.height.toFloat()
+        )
+        val afPointWidth = 1.0f / 6.0f  // 1/6 total area
+        val aePointWidth = afPointWidth * 1.5f
+
+        val afPoint = factory.createPoint(x, y, afPointWidth, 1.0f)
+        val aePoint = factory.createPoint(x, y, aePointWidth, 1.0f)
+        try {
+            getCameraControl(mCameraLensFacing).startFocusAndMetering(FocusMeteringAction.Builder.from(
+                afPoint,
+                FocusMeteringAction.MeteringMode.AF_ONLY
+            )
+                .addPoint(aePoint, FocusMeteringAction.MeteringMode.AE_ONLY) // could have many
+                .setAutoFocusCallback {
+                    Log.v(TAG, "setAutoFocusCallback_$it")
+                    action.invoke()
+                }
+                .setAutoCancelDuration(300, TimeUnit.MILLISECONDS)
+                .build()
+            )
+        } catch (e: CameraInfoUnavailableException) {
+            Log.d(TAG, "cannot access camera", e)
+            action.invoke()
         }
+//        // 取消
+//        getCameraControl(mCameraLensFacing).cancelFocusAndMetering()
+
+
+//        val pointFactory  =  TextureViewMeteringPointFactory(mCameraView)
+
+
     }
 
-    private fun handleFocus(focus: Rect, metering: Rect,action: () -> Unit) {
+    private fun handleFocus(focus: Rect, metering: Rect, action: () -> Unit) {
         val rescaledFocus: Rect
         val rescaledMetering: Rect
+        Log.v(TAG, "--------------------------- 1 ")
         try {
             val sensorRegion: Rect
             if (mCropRegion != null) {
@@ -272,38 +335,44 @@ class CameraHolder private constructor() {
             }
             rescaledFocus = rescaleViewRectToSensorRect(focus, sensorRegion)
             rescaledMetering = rescaleViewRectToSensorRect(metering, sensorRegion)
+
+            Log.v(TAG, "--------------------------- 2 ")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to rescale the focus and metering rectangles.", e)
             action.invoke()
             return
         }
+        Log.v(TAG, "---------------------------  3")
 
-        mPreview.focus(rescaledFocus, rescaledMetering, object : OnFocusListener {
-            override fun onFocusUnableToLock(afRect: Rect?) {
-                //无法获得焦点时回调
-                Log.v(TAG, "onFocusUnableToLock")
-                action.invoke()
-            }
+//        mPreview.focus(rescaledFocus, rescaledMetering, object : OnFocusListener {
+//            override fun onFocusUnableToLock(afRect: Rect) {
+//                //无法获得焦点时回调
+//                Log.v(TAG, "onFocusUnableToLock")
+//                action.invoke()
+//            }
+//
+//            override fun onFocusTimedOut(afRect: Rect) {
+//                // 对焦超时达到且af状态尚未确定时回调。
+//                Log.v(TAG, "onFocusTimedOut")
+//                action.invoke()
+//            }
+//
+//            override fun onFocusLocked(afRect: Rect) {
+//                // 锁定焦点后回调
+//                Log.v(TAG, "onFocusLocked")
+//                action.invoke()
+//            }
+//
+//        })
 
-            override fun onFocusTimedOut(afRect: Rect?) {
-                // 对焦超时达到且af状态尚未确定时回调。
-                Log.v(TAG, "onFocusTimedOut")
-                action.invoke()
-            }
 
-            override fun onFocusLocked(afRect: Rect?) {
-                action.invoke()
-                // 锁定焦点后回调
-                Log.v(TAG, "onFocusLocked")
-            }
-
-        })
     }
 
     private fun rescaleViewRectToSensorRect(view: Rect, sensor: Rect): Rect {
         // Scale width and height.
         val newWidth = (view.width() * sensor.width() / MAX_VIEW_DIMENSION.toFloat()).roundToInt()
-        val newHeight = (view.height() * sensor.height() / MAX_VIEW_DIMENSION.toFloat()).roundToInt()
+        val newHeight =
+            (view.height() * sensor.height() / MAX_VIEW_DIMENSION.toFloat()).roundToInt()
         // Scale top/left corner.
         val halfViewDimension = MAX_VIEW_DIMENSION / 2
         val leftOffset =
@@ -414,7 +483,7 @@ class CameraHolder private constructor() {
         try {
             val cameraId = CameraX.getCameraWithLensFacing(mCameraLensFacing)
             val cameraInfo = CameraX.getCameraInfo(cameraId)
-            rotationDegrees = cameraInfo!!.getSensorRotationDegrees(getDisplaySurfaceRotation())
+            rotationDegrees = cameraInfo.getSensorRotationDegrees(getDisplaySurfaceRotation())
             if (compensateForMirroring) {
                 rotationDegrees = (360 - rotationDegrees) % 360
             }

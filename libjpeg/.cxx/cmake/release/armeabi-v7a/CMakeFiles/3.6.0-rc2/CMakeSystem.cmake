@@ -1,6 +1,6 @@
-set(CMAKE_HOST_SYSTEM "Darwin-18.7.0")
+set(CMAKE_HOST_SYSTEM "Darwin-19.0.0")
 set(CMAKE_HOST_SYSTEM_NAME "Darwin")
-set(CMAKE_HOST_SYSTEM_VERSION "18.7.0")
+set(CMAKE_HOST_SYSTEM_VERSION "19.0.0")
 set(CMAKE_HOST_SYSTEM_PROCESSOR "x86_64")
 
 include("/Users/hetao/Documents/android-sdk-macosx/ndk-bundle/build/cmake/android.toolchain.cmake")

@@ -11,9 +11,9 @@
  * @author   : hetao
  */
 object Versions {
-    const val appcompat = "1.0.2"
+    const val appcompat = "1.1.0"
 
-    const val core_ktx = "1.0.2"
+    const val core_ktx = "1.1.0"
 
     const val espresso_core = "3.2.0"
 
@@ -29,15 +29,19 @@ object Versions {
 
     const val org_jetbrains_kotlin = "1.3.50"
 
-    const val coroutines_version = "1.1.1"
+    const val coroutines_version = "1.3.0"
 
-    const val lifecycle_version = "2.2.0-alpha02"
+    const val lifecycle_version = "2.2.0-beta01"
 
     const val nav_version = "2.0.0"
     //
-    const val camerax_version = "1.0.0-alpha04"
+    const val camerax_version = "1.0.0-alpha06"
+
+
     //
     const val glide_version = "4.9.0"
+
+    // ViewModel and LiveData
 
 }
 
