@@ -261,7 +261,6 @@ class CameraCaptureButton : View {
             repeat(150) {
                 progress = (it / 149.0f) * 360f
                 withContext(Dispatchers.Main) {
-                    invalida
                     // 利用协程挂起
                     delay(100L)
                     Log.v("updateProgress", "$progress")
