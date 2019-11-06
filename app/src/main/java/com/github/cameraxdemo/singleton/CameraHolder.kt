@@ -22,6 +22,7 @@ import androidx.core.view.ViewCompat
 import androidx.lifecycle.LifecycleOwner
 import com.github.cameraxdemo.application.BaseApplication
 import com.github.cameraxdemo.utiils.CameraXPreviewBuilder
+import com.github.cameraxdemo.utiils.FileType
 import com.github.cameraxdemo.utiils.FileUtils
 import java.io.File
 import java.util.concurrent.Executors
@@ -105,7 +106,7 @@ class CameraHolder private constructor() {
             isReversedHorizontal = mCameraLensFacing == LensFacing.FRONT
         }
         imageCapture?.takePicture(
-            FileUtils.getOutputMediaFile(), metadata, executor,
+            FileUtils.getFilePath(FileType.IMAGE), metadata, executor,
             object : ImageCapture.OnImageSavedListener {
                 override fun onError(
                     imageCaptureError: ImageCapture.ImageCaptureError,
@@ -171,7 +172,7 @@ class CameraHolder private constructor() {
         CameraX.bindToLifecycle(mLifecycleOwner, mPreview, videoCapture)
 
         videoCapture!!.startRecording(
-           FileUtils.getOutputMediaVideoFile(),
+            FileUtils.getFilePath(FileType.VIDEO),
             executor,
             object : VideoCapture.OnVideoSavedListener {
                 override fun onVideoSaved(file: File) {

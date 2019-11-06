@@ -21,7 +21,7 @@ object Versions {
 
     const val constraint_layout = "1.1.3"
 
-    const val com_android_tools_build_gradle = "3.5.0"
+    const val com_android_tools_build_gradle = "3.5.2"
 
     const val lint_gradle = "26.4.2"
 
